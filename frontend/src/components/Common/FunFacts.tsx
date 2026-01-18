@@ -111,18 +111,18 @@ export default function FunFacts() {
 
             <div>
                 <h3 className="text-xl font-bold text-gray-800">
-                    Analyzing Minutes...
+                    Crunching the Minutes...
                 </h3>
                 <p className="text-gray-500 text-sm mt-1">Reading through council documents</p>
             </div>
 
-            <div className="w-full bg-blue-50/50 rounded-xl border border-blue-200/60 p-5 shadow-sm">
-                <div className="text-xs font-semibold text-blue-600/80 mb-3 uppercase tracking-wider text-center">
+            <div className="w-full bg-blue-50/50 rounded-xl border border-blue-200/60 p-4 pt-3.5 shadow-sm">
+                <div className="text-base font-semibold text-blue-600/80 mb-2 uppercase tracking-wider text-center">
                     Did you know?
                 </div>
 
-                <div className={`transition-opacity duration-300 flex flex-col items-center gap-3 ${fade ? 'opacity-100' : 'opacity-0'}`}>
-                    <p className="text-gray-700 font-medium leading-relaxed">
+                <div className={`transition-opacity duration-300 flex flex-col items-center ${fade ? 'opacity-100' : 'opacity-0'}`}>
+                    <p className="text-sm text-gray-700 font-medium leading-relaxed">
                         "{currentFact.text}"
                     </p>
                 </div>

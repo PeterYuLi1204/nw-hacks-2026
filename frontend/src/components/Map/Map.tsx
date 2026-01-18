@@ -1,9 +1,9 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import { useEffect, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import type { DecisionWithContext } from '../../App'
-import { userLocationIcon } from '../../mapIcons'
+import { userLocationIcon, decisionMarkerIcon } from '../../mapIcons'
 import { AIChatButton, AIChatInterface } from '../Chat'
 import { IoNavigate } from 'react-icons/io5'
 
@@ -91,7 +91,7 @@ function MapControls({ userLocation }: { userLocation: [number, number] }) {
 
   return (
     <div className="leaflet-bottom leaflet-left" style={{ marginBottom: '80px', marginLeft: '10px' }}>
-      <div className="leaflet-control leaflet-bar !m-0">
+      <div className="leaflet-control leaflet-bar m-0!">
         <button
           onClick={flyToUserLocation}
           className="bg-white hover:bg-gray-50 w-[30px] h-[30px] flex items-center justify-center border-0 cursor-pointer text-gray-700 hover:text-blue-600 transition-colors"
@@ -129,20 +129,6 @@ export default function Map({
       d.location !== null && Array.isArray(d.location) && d.location.length === 2
   )
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return 'No date';
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
-    } catch {
-      return dateString;
-    }
-  };
-
   const handleSelectDecision = (decision: DecisionWithContext) => {
     if (onSelectDecision) {
       onSelectDecision(decision)
@@ -152,7 +138,7 @@ export default function Map({
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative' }}>
       {/* Logo and App Name - Top Left */}
-      <div className="absolute top-5 left-4 z-[1000] flex items-center gap-2">
+      <div className="absolute top-5 left-4 z-1000 flex items-center gap-2">
         <img 
           src="/logo.png" 
           alt="Town Square Logo" 
@@ -173,7 +159,7 @@ export default function Map({
         zoomControl={false}
         zoomAnimation={true}
         zoomAnimationThreshold={4}
-        wheelPxPerZoomLevel={60}
+        wheelPxPerZoomLevel={20}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -193,6 +179,7 @@ export default function Map({
           <Marker 
             key={decision.decisionId} 
             position={decision.location}
+            icon={decisionMarkerIcon}
             eventHandlers={{
               click: () => {
                 if (onMarkerClick) {

@@ -5,11 +5,11 @@ interface DistanceFilterProps {
 
 const DISTANCE_STEPS = [
   { value: 0, label: 'All' },
+  { value: 1, label: '1km' },
   { value: 2, label: '2km' },
   { value: 4, label: '4km' },
-  { value: 6, label: '6km' },
   { value: 8, label: '8km' },
-  { value: 10, label: '10km' },
+  { value: 16, label: '16km' },
 ];
 
 export default function DistanceFilter({

@@ -201,7 +201,7 @@ export default function AIChatInterface({
             <IoSparkles className="w-5 h-5 text-blue-600" />
             <h3 className="font-semibold text-base text-gray-900">Chat About Town</h3>
           </div>
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center">
             <button
               onClick={handleClearHistory}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -211,7 +211,7 @@ export default function AIChatInterface({
             </button>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors -mr-1"
               title="Close chat"
             >
               <IoClose className="w-5 h-5 text-gray-500" />
