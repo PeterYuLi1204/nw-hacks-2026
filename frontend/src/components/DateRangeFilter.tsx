@@ -37,7 +37,7 @@ const DateRangeFilter = forwardRef<DateRangeFilterRef, DateRangeFilterProps>(
   }));
 
   return (
-    <div className="absolute top-4 right-[420px] z-[1000]">
+    <div className="absolute top-4 right-4 z-[1000]">
       {/* Date selector box */}
       <div className="bg-white rounded-lg shadow-sm px-4 py-3 border border-gray-200">
         <p className="text-sm text-slate-500 mb-2">

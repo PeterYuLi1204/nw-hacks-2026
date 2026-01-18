@@ -1,4 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { useEffect } from 'react'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import type { DecisionWithContext } from '../App'
@@ -18,6 +19,43 @@ interface MapProps {
   zoom?: number
   decisions?: DecisionWithContext[]
   onMarkerClick?: (decision: DecisionWithContext) => void
+}
+
+// Component to handle automatic bounds adjustment
+function MapBoundsHandler({ 
+  userLocation, 
+  decisions 
+}: { 
+  userLocation: [number, number], 
+  decisions: DecisionWithContext[] 
+}) {
+  const map = useMap()
+
+  useEffect(() => {
+    // Filter decisions that have valid locations
+    const decisionsWithLocations = decisions.filter(
+      (d): d is DecisionWithContext & { location: [number, number] } => 
+        d.location !== null && Array.isArray(d.location) && d.location.length === 2
+    )
+
+    // If we have decisions with locations, adjust bounds to fit all points
+    if (decisionsWithLocations.length > 0) {
+      const bounds = L.latLngBounds([userLocation])
+      
+      // Add all decision locations to bounds
+      decisionsWithLocations.forEach(decision => {
+        bounds.extend(decision.location)
+      })
+
+      // Fit the map to show all markers with some padding
+      map.fitBounds(bounds, { 
+        padding: [5, 5],
+        maxZoom: 15 // Don't zoom in too much
+      })
+    }
+  }, [decisions, userLocation, map])
+
+  return null
 }
 
 export default function Map({ 
@@ -57,6 +95,9 @@ export default function Map({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
+      
+      {/* Component to handle automatic bounds adjustment */}
+      <MapBoundsHandler userLocation={userLocation} decisions={decisions} />
       
       {/* User location marker at center */}
       <Marker position={userLocation} icon={userLocationIcon} />
