@@ -144,7 +144,7 @@ export default function Map({
           alt="Town Square Logo" 
           className="h-10 w-auto object-contain"
         />
-        <div className="text-xl font-medium text-gray-800 leading-tight">
+        <div className="text-xl font-medium text-gray-800 leading-tight mb-0.5">
           <span className="text-blue-400 italic underline underline-offset-4 decoration-dashed decoration-2" style={{ fontFamily: 'Georgia, serif' }}>
             Town Square
           </span>
@@ -173,13 +173,19 @@ export default function Map({
         <MapControls userLocation={userLocation} />
         
         {/* User location marker at center */}
-        <Marker position={userLocation} icon={userLocationIcon} interactive={false} />
+        <Marker 
+          position={userLocation} 
+          icon={userLocationIcon} 
+          interactive={false}
+          zIndexOffset={1000}
+        />
 
         {decisionsWithLocations.map((decision) => (
           <Marker 
             key={decision.decisionId} 
             position={decision.location}
             icon={decisionMarkerIcon}
+            zIndexOffset={100}
             eventHandlers={{
               click: () => {
                 if (onMarkerClick) {

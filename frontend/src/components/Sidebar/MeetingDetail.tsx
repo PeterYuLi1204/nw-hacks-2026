@@ -25,7 +25,7 @@ export default function MeetingDetail({ decision, onBack }: MeetingDetailProps) 
     <div className="fixed top-0 right-0 h-full w-[370px] bg-gradient-to-b from-gray-50 to-white shadow-2xl z-[999]">
       <div className="h-full flex flex-col">
         {/* Header with back button */}
-        <div className="relative bg-white border-b-2 border-blue-200 p-5">
+        <div className="relative bg-white border-b-1 border-gray-200 p-5">
           <button
             onClick={onBack}
             className="flex items-center text-gray-600 hover:text-blue-600 mb-3 transition-colors group"
@@ -33,7 +33,7 @@ export default function MeetingDetail({ decision, onBack }: MeetingDetailProps) 
             <IoChevronBack className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" />
             <span className="text-sm font-medium">Back to list</span>
           </button>
-          <h2 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
+          <h2 className="text-2xl font-bold text-gray-900 underline underline-offset-4 decoration-dashed decoration-2" style={{ fontFamily: 'Georgia, serif' }}>
             What's the decision?
           </h2>
           <p className="text-sm text-gray-600 mt-1">Here's what happened at this meeting</p>

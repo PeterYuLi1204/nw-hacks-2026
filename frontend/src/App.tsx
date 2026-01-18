@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import Map from './components/Map'
 import { Splash, DateRangeFilter } from './components/Common'
 import type { DateRangeFilterRef } from './components/Common/DateRangeFilter'
-import { MeetingsSidebar } from './components/Meetings'
+import { MeetingsSidebar } from './components/Sidebar'
 import { SIDEBAR_WIDTH } from './constants/layout'
 import './App.css'
 
@@ -110,7 +110,12 @@ function App() {
           meetingUrl: meeting.meetingUrl,
         }));
 
-        setDecisions(prev => [...prev, ...newDecisions]);
+        // Pseudo-stream decisions one by one for better UX
+        newDecisions.forEach((decision, index) => {
+          setTimeout(() => {
+            setDecisions(prev => [...prev, decision]);
+          }, index * 1000); // 1000ms delay between each decision
+        });
       }
     });
 

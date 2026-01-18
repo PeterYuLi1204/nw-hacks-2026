@@ -104,7 +104,7 @@ export default function FunFacts() {
     const currentFact = VANCOUVER_FACTS[factIndex];
 
     return (
-        <div className="flex flex-col items-center justify-center h-full p-6 text-center space-y-6">
+        <div className="flex flex-col items-center justify-center h-full p-6 pb-18 text-center space-y-6">
             <div className="relative">
                 <div className="w-12 h-12 border-3 border-gray-200 border-t-blue-400 rounded-full animate-spin"></div>
             </div>
@@ -117,8 +117,13 @@ export default function FunFacts() {
             </div>
 
             <div className="w-full bg-blue-50/50 rounded-xl border border-blue-200/60 p-4 pt-3.5 shadow-sm">
-                <div className="text-base font-semibold text-blue-600/80 mb-2 uppercase tracking-wider text-center">
-                    Did you know?
+                <div className="text-center mb-2">
+                    <div className="text-base font-semibold text-blue-600/80 uppercase tracking-wider">
+                        Did you know?
+                    </div>
+                    <div className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mt-1">
+                        Vancouver Trivia
+                    </div>
                 </div>
 
                 <div className={`transition-opacity duration-300 flex flex-col items-center ${fade ? 'opacity-100' : 'opacity-0'}`}>

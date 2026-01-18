@@ -25,13 +25,13 @@ export default function SidebarHeader({
   const hasDecisions = decisionsCount > 0;
 
   return (
-    <div className="relative bg-white border-b border-gray-200 p-5 transition-all duration-300">
+    <div className="relative bg-white border-b border-gray-200 p-5 pb-3.5 transition-all duration-300">
       <div className="flex items-start justify-between mb-2">
         <div className="flex-1">
-          <h2 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
+          <h2 className="text-2xl font-bold text-gray-900 underline underline-offset-4 decoration-dashed decoration-2" style={{ fontFamily: 'Georgia, serif' }}>
             What's Happening
           </h2>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-center gap-2 mt-2">
             {loading && (
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
             )}
@@ -69,7 +69,7 @@ export default function SidebarHeader({
               title={loading ? "Stop search" : "Clear results"}
             >
               {loading ? (
-                <IoStopOutline className="w-6 h-6 text-red-500 group-hover:text-red-600 transition-colors" />
+                <IoStopOutline className="w-6 h-6 text-orange-500 group-hover:text-orange-600 transition-colors" />
               ) : (
                 <IoClose className="w-6 h-6 text-gray-500 group-hover:text-gray-700 transition-colors" />
               )}

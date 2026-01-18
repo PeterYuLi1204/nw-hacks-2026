@@ -3,7 +3,7 @@ import MeetingDetail from './MeetingDetail';
 import MeetingsList from './MeetingsList';
 import SidebarHeader from './SidebarHeader';
 import { SIDEBAR_WIDTH } from '../../constants/layout';
-import FunFacts from '../Common/FunFacts';
+import FunFacts from './FunFacts';
 
 interface MeetingsSidebarProps {
   decisions: DecisionWithContext[];
@@ -47,7 +47,7 @@ export default function MeetingsSidebar({
           onMaxDistanceChange={onMaxDistanceChange}
         />
 
-        <div className="flex-1 overflow-y-auto p-3 mb-11">
+        <div className="flex-1 overflow-y-auto p-3">
           {loading && decisions.length === 0 ? (
             <FunFacts />
           ) : (

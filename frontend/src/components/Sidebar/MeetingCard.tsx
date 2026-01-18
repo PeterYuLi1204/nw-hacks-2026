@@ -32,7 +32,7 @@ export default function MeetingCard({ decision, onClick }: MeetingCardProps) {
       
       <div className="text-xs text-gray-500 mb-3 flex items-center">
         <IoCalendarOutline className="w-3.5 h-3.5 mr-1" />
-        <span>{formatDate(decision.meetingDate)}</span>
+        <span className="whitespace-nowrap">{formatDate(decision.meetingDate)}</span>
         <span className="mx-2">•</span>
         <span>{decision.meetingType}</span>
       </div>

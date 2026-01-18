@@ -66,21 +66,21 @@ const DateRangeFilter = forwardRef<DateRangeFilterRef, DateRangeFilterProps>(
           <button
             onClick={() => handlePresetRange(7)}
             disabled={loading}
-            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-7a0 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 text-xs bg-gray-200/50 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-7a0 disabled:cursor-not-allowed"
           >
             Last week
           </button>
           <button
             onClick={() => handlePresetRange(30)}
             disabled={loading}
-            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 text-xs bg-gray-200/50 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             Last month
           </button>
           <button
             onClick={() => handlePresetRange(90)}
             disabled={loading}
-            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 text-xs bg-gray-200/50 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             Last 3 months
           </button>
