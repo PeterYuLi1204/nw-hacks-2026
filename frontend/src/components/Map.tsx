@@ -1,8 +1,8 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-import type { DecisionWithContext } from './App'
-import { userLocationIcon } from './mapIcons'
+import type { DecisionWithContext } from '../App'
+import { userLocationIcon } from '../mapIcons'
 
 // Fix for default marker icon in React-Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

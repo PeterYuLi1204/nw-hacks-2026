@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
-import Map from './Map'
-import Splash from './Splash'
+import Map from './components/Map'
+import Splash from './components/Splash'
 import DateRangeFilter from './components/DateRangeFilter'
 import MeetingsSidebar from './components/MeetingsSidebar'
 import './App.css'
