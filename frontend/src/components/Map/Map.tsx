@@ -171,6 +171,9 @@ export default function Map({
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
         zoomControl={false}
+        zoomAnimation={true}
+        zoomAnimationThreshold={4}
+        wheelPxPerZoomLevel={60}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -197,23 +200,7 @@ export default function Map({
                 }
               }
             }}
-          >
-            <Popup>
-              <div className="max-w-[250px]">
-                <h3 className="font-semibold text-sm mb-1">{decision.title}</h3>
-                <p className="text-xs text-gray-500 mb-2">
-                  {decision.meetingType} • {formatDate(decision.meetingDate)}
-                </p>
-                <p className="text-xs text-gray-600 line-clamp-3">{decision.summary}</p>
-                <button
-                  onClick={() => onMarkerClick && onMarkerClick(decision)}
-                  className="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  View details →
-                </button>
-              </div>
-            </Popup>
-          </Marker>
+          />
         ))}
       </MapContainer>
 

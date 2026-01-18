@@ -7,6 +7,7 @@ interface DateRangeFilterProps {
 
 export interface DateRangeFilterRef {
   clearDates: () => void;
+  setDates: (startDate: string, endDate: string) => void;
 }
 
 const DateRangeFilter = forwardRef<DateRangeFilterRef, DateRangeFilterProps>(
@@ -43,15 +44,19 @@ const DateRangeFilter = forwardRef<DateRangeFilterRef, DateRangeFilterProps>(
     onFilter(startDateStr, endDateStr);
   };
 
-  // Expose clearDates method to parent via ref
+  // Expose methods to parent via ref
   useImperativeHandle(ref, () => ({
-    clearDates: handleClear
+    clearDates: handleClear,
+    setDates: (start: string, end: string) => {
+      setStartDate(start);
+      setEndDate(end);
+    }
   }));
 
   return (
     <div className="absolute top-4 right-4 z-1000">
       {/* Date selector box */}
-      <div className="bg-white rounded-lg shadow-sm px-4 py-3 border border-gray-200">
+      <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-sm px-4 py-3 border border-gray-200">
         <p className="text-sm text-slate-500 mb-2">
           <strong>Find council decisions from...</strong>
         </p>
@@ -59,25 +64,25 @@ const DateRangeFilter = forwardRef<DateRangeFilterRef, DateRangeFilterProps>(
         {/* Preset buttons */}
         <div className="flex items-center gap-2 mb-3">
           <button
-            onClick={() => handlePresetRange(3)}
-            disabled={loading}
-            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Last 3 days
-          </button>
-          <button
             onClick={() => handlePresetRange(7)}
             disabled={loading}
-            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-7a0 disabled:cursor-not-allowed"
           >
             Last week
           </button>
           <button
             onClick={() => handlePresetRange(30)}
             disabled={loading}
-            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             Last month
+          </button>
+          <button
+            onClick={() => handlePresetRange(90)}
+            disabled={loading}
+            className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            Last 3 months
           </button>
         </div>
 

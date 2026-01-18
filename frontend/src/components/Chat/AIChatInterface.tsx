@@ -167,13 +167,6 @@ export default function AIChatInterface({
         <p className="text-xs text-gray-700 mb-1.5">{suggestedRange.reason}</p>
         <div className="flex gap-1.5">
           <button
-            onClick={() => handleQuickSearch(3)}
-            disabled={isSearching}
-            className="flex-1 px-2 py-1 text-xs font-medium bg-white hover:bg-gray-100 text-gray-700 rounded border border-gray-300 transition-colors disabled:opacity-50"
-          >
-            3 days
-          </button>
-          <button
             onClick={() => handleQuickSearch(7)}
             disabled={isSearching}
             className="flex-1 px-2 py-1 text-xs font-medium bg-white hover:bg-gray-100 text-gray-700 rounded border border-gray-300 transition-colors disabled:opacity-50"
@@ -187,13 +180,20 @@ export default function AIChatInterface({
           >
             Last month
           </button>
+          <button
+            onClick={() => handleQuickSearch(90)}
+            disabled={isSearching}
+            className="flex-1 px-2 py-1 text-xs font-medium bg-white hover:bg-gray-100 text-gray-700 rounded border border-gray-300 transition-colors disabled:opacity-50"
+          >
+            Last 3 months
+          </button>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="absolute bottom-6 right-6 z-[1000] w-[390px] h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200">
+    <div className="absolute bottom-6 right-6 z-[1000] w-[390px] h-[500px] bg-whiteGe rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200">
       {/* Header */}
       <div className="bg-white border-b-2 border-blue-200">
         <div className="flex items-center justify-between px-4 py-3">
@@ -253,12 +253,6 @@ export default function AIChatInterface({
                 ) : (
                   <div className="flex gap-2 justify-center">
                     <button
-                      onClick={() => handleQuickSearch(3)}
-                      className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors border border-gray-200"
-                    >
-                      3 days
-                    </button>
-                    <button
                       onClick={() => handleQuickSearch(7)}
                       className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors border border-gray-200"
                     >
@@ -269,6 +263,12 @@ export default function AIChatInterface({
                       className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors border border-gray-200"
                     >
                       Last month
+                    </button>
+                    <button
+                      onClick={() => handleQuickSearch(90)}
+                      className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors border border-gray-200"
+                    >
+                      Last 3 months
                     </button>
                   </div>
                 )}

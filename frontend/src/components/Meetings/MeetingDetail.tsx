@@ -48,8 +48,8 @@ export default function MeetingDetail({ decision, onBack }: MeetingDetailProps) 
           {/* Meeting context */}
           <div className="bg-white border border-gray-200 rounded-xl p-4 pb-2.5 shadow-sm">
             <div className="flex items-center mb-3">
-              <IoInformationCircleOutline className="w-4 h-4 text-gray-500 mr-2" />
-              <h4 className="font-semibold text-gray-700 text-xs uppercase tracking-wide">Meeting Info</h4>
+              <IoInformationCircleOutline className="w-4 h-4 text-gray-500 mr-1.5" />
+              <h4 className="font-semibold text-gray-700 text-xs uppercase tracking-wide">Council Meeting Info</h4>
             </div>
             <div className="space-y-2">
               <p className="text-sm text-gray-700 flex items-start">
@@ -88,7 +88,7 @@ export default function MeetingDetail({ decision, onBack }: MeetingDetailProps) 
           {/* Full content */}
           <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
             <div className="flex items-center mb-3">
-              <IoDocumentTextOutline className="w-4 h-4 text-gray-500 mr-2" />
+              <IoDocumentTextOutline className="w-4 h-4 text-gray-500 mr-1.5" />
               <h4 className="font-semibold text-gray-700 text-xs uppercase tracking-wide">The Full Story</h4>
             </div>
             <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import Map from './components/Map'
 import { Splash, DateRangeFilter } from './components/Common'
+import type { DateRangeFilterRef } from './components/Common/DateRangeFilter'
 import { MeetingsSidebar } from './components/Meetings'
 import { SIDEBAR_WIDTH } from './constants/layout'
 import './App.css'
@@ -41,7 +42,7 @@ function App() {
   const [currentStartDate, setCurrentStartDate] = useState<string | null>(null);
   const [currentEndDate, setCurrentEndDate] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
-  const dateFilterRef = useRef<{ clearDates: () => void } | null>(null);
+  const dateFilterRef = useRef<DateRangeFilterRef | null>(null);
   const [maxDistance, setMaxDistance] = useState<number | null>(null);
 
   // Helper to calculate distance
@@ -78,6 +79,11 @@ function App() {
     setSelectedDecision(null);
     setCurrentStartDate(startDate);
     setCurrentEndDate(endDate);
+
+    // Update the date filter component to reflect the selected dates
+    if (dateFilterRef.current) {
+      dateFilterRef.current.setDates(startDate, endDate);
+    }
 
     const params = new URLSearchParams();
     if (startDate) params.append('startDate', startDate);

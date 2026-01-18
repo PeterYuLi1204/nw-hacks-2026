@@ -47,7 +47,7 @@ export default function MeetingsSidebar({
           onMaxDistanceChange={onMaxDistanceChange}
         />
 
-        <div className="flex-1 overflow-y-auto p-3 mb-5">
+        <div className="flex-1 overflow-y-auto p-3 mb-11">
           {loading && decisions.length === 0 ? (
             <FunFacts />
           ) : (

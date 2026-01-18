@@ -69,7 +69,7 @@ export default function SidebarHeader({
               title={loading ? "Stop search" : "Clear results"}
             >
               {loading ? (
-                <IoStopOutline className="w-6 h-6 text-red-400 group-hover:text-red-600 transition-colors" />
+                <IoStopOutline className="w-6 h-6 text-red-500 group-hover:text-red-600 transition-colors" />
               ) : (
                 <IoClose className="w-6 h-6 text-gray-500 group-hover:text-gray-700 transition-colors" />
               )}
