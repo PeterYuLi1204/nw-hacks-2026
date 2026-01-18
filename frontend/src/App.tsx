@@ -42,6 +42,29 @@ function App() {
   const [currentEndDate, setCurrentEndDate] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const dateFilterRef = useRef<{ clearDates: () => void } | null>(null);
+  const [maxDistance, setMaxDistance] = useState<number | null>(null);
+
+  // Helper to calculate distance
+  const getDistanceFromLatLonInKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Radius of the earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  const filteredDecisions = decisions.filter(d => {
+    if (!maxDistance || !userLocation || !d.location) return true;
+    const dist = getDistanceFromLatLonInKm(
+      userLocation[0], userLocation[1],
+      d.location[0], d.location[1]
+    );
+    return dist <= maxDistance;
+  });
 
   const handleFilter = (startDate: string, endDate: string) => {
     // Close any existing connection
@@ -142,6 +165,7 @@ function App() {
     setError(null);
     setCurrentStartDate(null);
     setCurrentEndDate(null);
+    setMaxDistance(null); // Reset distance filter
     // Clear date fields
     if (dateFilterRef.current) {
       dateFilterRef.current.clearDates();
@@ -157,7 +181,7 @@ function App() {
             <Map
               userLocation={userLocation}
               zoom={13}
-              decisions={decisions}
+              decisions={filteredDecisions}
               onMarkerClick={handleMarkerClick}
               onSelectDecision={setSelectedDecision}
               currentDateRange={{ startDate: currentStartDate, endDate: currentEndDate }}
@@ -182,12 +206,14 @@ function App() {
           {/* Right side: Sidebar */}
           <div style={{ width: `${SIDEBAR_WIDTH}px`, height: '100%', flexShrink: 0 }}>
             <MeetingsSidebar
-              decisions={decisions}
+              decisions={filteredDecisions}
               loading={loading}
               selectedDecision={selectedDecision}
               onDecisionClick={handleDecisionClick}
               onBack={handleBack}
               onCancel={handleCancel}
+              maxDistance={maxDistance}
+              onMaxDistanceChange={setMaxDistance}
             />
           </div>
         </div>
