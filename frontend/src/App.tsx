@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react'
 import Map from './components/Map'
-import Splash from './components/Splash'
-import DateRangeFilter from './components/DateRangeFilter'
-import MeetingsSidebar from './components/MeetingsSidebar'
+import { Splash, DateRangeFilter } from './components/Common'
+import { MeetingsSidebar } from './components/Meetings'
+import { SIDEBAR_WIDTH } from './constants/layout'
 import './App.css'
 
 export interface MeetingDecision {
@@ -38,6 +38,8 @@ function App() {
   const [selectedDecision, setSelectedDecision] = useState<DecisionWithContext | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentStartDate, setCurrentStartDate] = useState<string | null>(null);
+  const [currentEndDate, setCurrentEndDate] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const dateFilterRef = useRef<{ clearDates: () => void } | null>(null);
 
@@ -51,6 +53,8 @@ function App() {
     setError(null);
     setDecisions([]);
     setSelectedDecision(null);
+    setCurrentStartDate(startDate);
+    setCurrentEndDate(endDate);
 
     const params = new URLSearchParams();
     if (startDate) params.append('startDate', startDate);
@@ -130,6 +134,8 @@ function App() {
     setDecisions([]);
     setSelectedDecision(null);
     setError(null);
+    setCurrentStartDate(null);
+    setCurrentEndDate(null);
     
     // Clear date fields
     if (dateFilterRef.current) {
@@ -149,12 +155,15 @@ function App() {
               decisions={decisions}
               onMarkerClick={handleMarkerClick}
               onSelectDecision={setSelectedDecision}
+              currentDateRange={{ startDate: currentStartDate, endDate: currentEndDate }}
+              onTriggerSearch={handleFilter}
+              isSearching={loading}
             />
 
             <DateRangeFilter ref={dateFilterRef} onFilter={handleFilter} loading={loading} />
 
             {error && (
-              <div className="absolute bottom-4 left-4 z-1001 bg-amber-50 border border-amber-300 text-amber-800 px-4 py-3 rounded shadow-lg max-w-md">
+              <div className="absolute bottom-4 left-4 z-1001 bg-red-50 border border-red-300 text-red-800 px-4 py-3 rounded shadow-lg max-w-md">
                 <div className="flex items-center">
                   <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -166,7 +175,7 @@ function App() {
           </div>
 
           {/* Right side: Sidebar */}
-          <div style={{ width: '400px', height: '100%', flexShrink: 0 }}>
+          <div style={{ width: `${SIDEBAR_WIDTH}px`, height: '100%', flexShrink: 0 }}>
             <MeetingsSidebar
               decisions={decisions}
               loading={loading}

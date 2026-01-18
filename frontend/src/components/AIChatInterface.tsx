@@ -186,7 +186,7 @@ export default function AIChatInterface({
                 <div className="mt-3 pt-3 border-t border-gray-200">
                   <p className="text-xs text-gray-500 mb-2">References:</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {message.references.map((refId) => {
+                    {message.references.slice(0, 5).map((refId) => {
                       const decision = getDecisionById(refId);
                       if (!decision) return null;
                       return (
@@ -200,6 +200,11 @@ export default function AIChatInterface({
                         </button>
                       );
                     })}
+                    {message.references.length > 5 && (
+                      <span className="text-xs text-gray-500 px-2.5 py-1">
+                        and {message.references.length - 5} more
+                      </span>
+                    )}
                   </div>
                 </div>
               )}

@@ -1,5 +1,5 @@
 import { IoCalendarOutline, IoLocationSharp } from 'react-icons/io5';
-import type { DecisionWithContext } from '../App';
+import type { DecisionWithContext } from '../../App';
 
 interface MeetingCardProps {
   decision: DecisionWithContext;

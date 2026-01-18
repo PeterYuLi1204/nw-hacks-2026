@@ -1,7 +1,8 @@
-import type { DecisionWithContext } from '../App';
+import type { DecisionWithContext } from '../../App';
 import MeetingDetail from './MeetingDetail';
 import MeetingsList from './MeetingsList';
 import SidebarHeader from './SidebarHeader';
+import { SIDEBAR_WIDTH } from '../../constants/layout';
 
 interface MeetingsSidebarProps {
   decisions: DecisionWithContext[];
@@ -27,7 +28,10 @@ export default function MeetingsSidebar({
 
   // List view
   return (
-    <div className="fixed top-0 right-0 h-full w-[400px] bg-gradient-to-b from-gray-50 to-white shadow-2xl z-[999]">
+    <div 
+      className="fixed top-0 right-0 h-full bg-gradient-to-b from-gray-50 to-white shadow-2xl z-[999]"
+      style={{ width: `${SIDEBAR_WIDTH}px` }}
+    >
       <div className="h-full flex flex-col">
         <SidebarHeader 
           decisionsCount={decisions.length}

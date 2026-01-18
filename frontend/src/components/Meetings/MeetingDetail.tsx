@@ -1,5 +1,5 @@
 import { IoChevronBack, IoCalendarOutline, IoLocationSharp, IoDocumentTextOutline, IoLinkOutline, IoSparkles } from 'react-icons/io5';
-import type { DecisionWithContext } from '../App';
+import type { DecisionWithContext } from '../../App';
 
 interface MeetingDetailProps {
   decision: DecisionWithContext;

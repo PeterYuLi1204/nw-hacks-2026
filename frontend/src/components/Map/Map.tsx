@@ -2,10 +2,9 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import { useEffect, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-import type { DecisionWithContext } from '../App'
-import { userLocationIcon } from '../mapIcons'
-import AIChatButton from './AIChatButton'
-import AIChatInterface from './AIChatInterface'
+import type { DecisionWithContext } from '../../App'
+import { userLocationIcon } from '../../mapIcons'
+import { AIChatButton, AIChatInterface } from '../Chat'
 
 // Fix for default marker icon in React-Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,12 +15,20 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 })
 
+interface DateRangeContext {
+  startDate: string | null
+  endDate: string | null
+}
+
 interface MapProps {
   userLocation?: [number, number]
   zoom?: number
   decisions?: DecisionWithContext[]
   onMarkerClick?: (decision: DecisionWithContext) => void
   onSelectDecision?: (decision: DecisionWithContext) => void
+  currentDateRange?: DateRangeContext
+  onTriggerSearch?: (startDate: string, endDate: string) => void
+  isSearching?: boolean
 }
 
 // Component to handle automatic bounds adjustment
@@ -53,7 +60,7 @@ function MapBoundsHandler({
       // Fit the map to show all markers with some padding
       map.fitBounds(bounds, { 
         padding: [0, 0],
-        maxZoom: 10
+        maxZoom: 14
       })
     }
   }, [decisions, userLocation, map])
@@ -66,7 +73,10 @@ export default function Map({
   zoom = 13,
   decisions = [],
   onMarkerClick,
-  onSelectDecision
+  onSelectDecision,
+  currentDateRange,
+  onTriggerSearch,
+  isSearching = false
 }: MapProps) {
   const [isChatOpen, setIsChatOpen] = useState(false)
 
@@ -152,6 +162,9 @@ export default function Map({
           onClose={() => setIsChatOpen(false)}
           decisions={decisions}
           onSelectDecision={handleSelectDecision}
+          currentDateRange={currentDateRange}
+          onTriggerSearch={onTriggerSearch}
+          isSearching={isSearching}
         />
       ) : (
         <AIChatButton onClick={() => setIsChatOpen(true)} />

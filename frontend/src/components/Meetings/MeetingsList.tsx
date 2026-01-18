@@ -1,5 +1,5 @@
 import { IoSearchOutline } from 'react-icons/io5';
-import type { DecisionWithContext } from '../App';
+import type { DecisionWithContext } from '../../App';
 import MeetingCard from './MeetingCard';
 
 interface MeetingsListProps {
