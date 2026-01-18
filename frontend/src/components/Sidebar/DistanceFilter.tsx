@@ -31,7 +31,7 @@ export default function DistanceFilter({
   return (
     <div className="flex flex-col gap-2 mt-1">
       <div className="flex justify-between items-center text-sm font-medium text-gray-700">
-        <span>Show decisions within...</span>
+        <span className="italic">Show decisions within...</span>
         <span className="text-blue-600">
           {maxDistance ? `${maxDistance}km` : 'All'}
         </span>
