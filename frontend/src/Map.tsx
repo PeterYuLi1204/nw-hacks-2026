@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import type { DecisionWithContext } from './App'
+import { userLocationIcon } from './mapIcons'
 
 // Fix for default marker icon in React-Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,14 +14,14 @@ L.Icon.Default.mergeOptions({
 })
 
 interface MapProps {
-  center?: [number, number]
+  userLocation?: [number, number]
   zoom?: number
   decisions?: DecisionWithContext[]
   onMarkerClick?: (decision: DecisionWithContext) => void
 }
 
 export default function Map({ 
-  center = [49.2827, -123.1207], 
+  userLocation = [49.2827, -123.1207], 
   zoom = 13,
   decisions = [],
   onMarkerClick
@@ -47,7 +48,7 @@ export default function Map({
 
   return (
     <MapContainer
-      center={center}
+      center={userLocation}
       zoom={zoom}
       style={{ height: '100%', width: '100%' }}
       scrollWheelZoom={true}
@@ -56,6 +57,9 @@ export default function Map({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
+      
+      {/* User location marker at center */}
+      <Marker position={userLocation} icon={userLocationIcon} />
 
       {decisionsWithLocations.map((decision) => (
         <Marker 
