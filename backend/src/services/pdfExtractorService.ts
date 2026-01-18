@@ -58,10 +58,11 @@ export async function extractMeetingText(meeting: MeetingRecord): Promise<string
 
     // Step 3: Construct full PDF URL
     let pdfUrl: string;
-    if (minutesLink.startsWith('http')) {
-      pdfUrl = minutesLink;
-    } else if (minutesLink.startsWith('/')) {
-      pdfUrl = `https://council.vancouver.ca${minutesLink}`;
+    const link = minutesLink as string;
+    if (link.startsWith('http')) {
+      pdfUrl = link;
+    } else if (link.startsWith('/')) {
+      pdfUrl = `https://council.vancouver.ca${link}`;
     } else {
       // Relative URL - construct from meeting URL base
       const baseUrl = meetingUrl.substring(0, meetingUrl.lastIndexOf('/'));
@@ -119,7 +120,7 @@ export async function extractMultipleMeetingsText(
   concurrencyLimit: number = 5
 ): Promise<MeetingRecord[]> {
   console.log(`\nExtracting PDF text from ${meetings.length} meetings (concurrency: ${concurrencyLimit})...`);
-  
+
   const results: MeetingRecord[] = [];
   const queue = [...meetings];
   let completed = 0;
@@ -127,16 +128,16 @@ export async function extractMultipleMeetingsText(
   // Process in batches with concurrency limit
   while (queue.length > 0) {
     const batch = queue.splice(0, concurrencyLimit);
-    
+
     const batchResults = await Promise.all(
       batch.map(async (meeting) => {
         const pdfText = await extractMeetingText(meeting);
         completed++;
-        
+
         if (completed % 10 === 0 || completed === meetings.length) {
           console.log(`Progress: ${completed}/${meetings.length} (${Math.round(completed * 100 / meetings.length)}%)`);
         }
-        
+
         return {
           ...meeting,
           pdfText: pdfText || undefined

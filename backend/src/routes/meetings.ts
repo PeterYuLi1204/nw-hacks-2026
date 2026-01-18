@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { fetchAllMeetings, filterMeetingsByDate, sortMeetingsByDate } from '../services/councilMeetingsService.js';
+
 import { extractMultipleMeetingsText } from '../services/pdfExtractorService.js';
 import { GeminiService } from '../services/gemini.service.js';
 import type { MeetingRecord } from '../types/meeting.js';
@@ -74,26 +75,73 @@ router.get('/meetings', async (req: Request, res: Response) => {
 
     // Step 5: Process each meeting with Gemini and stream results
     const service = getGeminiService();
-    
-    for (const meeting of meetingsWithText) {
+
+    // Helper for concurrency control
+    const runConcurrent = async <T>(
+      items: T[],
+      concurrency: number,
+      fn: (item: T) => Promise<void>
+    ) => {
+      const iterator = items.entries();
+      const workers = Array(Math.min(concurrency, items.length))
+        .fill(null)
+        .map(async () => {
+          for (const [_, item] of iterator) {
+            await fn(item);
+          }
+        });
+      await Promise.all(workers);
+    };
+
+    // State for re-sequencing events
+    let nextIndexToSend = 0;
+    const pendingResults = new Map<number, MeetingRecord>();
+
+    // Helper to send buffered results in order
+    const sendPendingResults = () => {
+      while (pendingResults.has(nextIndexToSend)) {
+        const meeting = pendingResults.get(nextIndexToSend)!;
+        pendingResults.delete(nextIndexToSend);
+
+        // Send the meeting event
+        sendEvent('meeting', meeting);
+        console.log(`  -> Sent meeting ${meeting.id} (index ${nextIndexToSend})`);
+
+        nextIndexToSend++;
+      }
+    };
+
+    await runConcurrent(meetingsWithText, 3, async (meeting) => {
+      // Find the original index of this meeting in the sorted list
+      // This assumes meetingsWithText is sorted and we want to preserve that order
+      // We can use the meeting.id if it corresponds to the index, 
+      // but explicitly passing the index or finding it is safer if IDs aren't sequential 0..N
+      const index = meetingsWithText.findIndex(m => m.id === meeting.id);
+
       try {
         let meetingWithDecisions: MeetingRecord = { ...meeting };
 
         if (service && meeting.pdfText) {
-          console.log(`Processing meeting ${meeting.id} with Gemini...`);
+          console.log(`Processing meeting ${meeting.id} (index ${index}) with Gemini...`);
           const decisions = await service.extractMeetingDecisions(meeting.pdfText);
           meetingWithDecisions.decisions = decisions;
-          console.log(`  Extracted ${decisions.length} decisions`);
+          console.log(`  Extracted ${decisions.length} decisions from meeting ${meeting.id}`);
         }
 
-        // Send meeting with decisions to client
-        sendEvent('meeting', meetingWithDecisions);
+        // Buffer the result instead of sending immediately
+        pendingResults.set(index, meetingWithDecisions);
+
+        // Try to send pending results
+        sendPendingResults();
+
       } catch (error: any) {
         console.error(`Error processing meeting ${meeting.id}:`, error.message);
-        // Send meeting without decisions if Gemini fails
-        sendEvent('meeting', meeting);
+
+        // Even on error, we must account for this index to not block the stream
+        pendingResults.set(index, meeting);
+        sendPendingResults();
       }
-    }
+    });
 
     // Send completion event
     sendEvent('complete', { count: meetingsWithText.length });
@@ -116,7 +164,7 @@ router.get('/meetings/test', async (req: Request, res: Response) => {
     const { startDate, endDate } = req.query;
 
     console.log('\n=== Test Endpoint ===');
-    
+
     const allMeetings = await fetchAllMeetings('previous');
     const filteredMeetings = filterMeetingsByDate(
       allMeetings,

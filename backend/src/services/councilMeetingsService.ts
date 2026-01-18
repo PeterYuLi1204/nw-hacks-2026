@@ -6,7 +6,7 @@ const API_KEY = process.env.VANCOUVER_API_KEY || '19B5C94F2AA4BFEADA1806F16481A5
 const ENDPOINT = `${API_BASE_URL}/CouncilMeetings`;
 
 // Common API key header formats to try
-const API_KEY_HEADERS = [
+const API_KEY_HEADERS: Record<string, string>[] = [
   { 'X-API-Key': API_KEY },
   { 'Api-Key': API_KEY },
   { 'API-Key': API_KEY },
@@ -29,7 +29,7 @@ async function testApiKeyFormat(): Promise<Record<string, string> | null> {
     try {
       const headerName = Object.keys(headers)[0];
       console.log(`Trying header: ${headerName}`);
-      
+
       const response = await axios.get(ENDPOINT, { params, headers, timeout: 10000 });
 
       if (response.status === 200) {
@@ -74,14 +74,14 @@ export async function fetchAllMeetings(
     const useQueryParam = workingHeaders === null;
 
     const params: any = { type: meetingType };
-    
+
     // If API key should be in query params, add it
     if (useQueryParam) {
       params.apiKey = API_KEY;
     }
 
     console.log(`\nFetching all ${meetingType} meetings...`);
-    
+
     const response = await axios.get(ENDPOINT, {
       params,
       headers: workingHeaders || undefined,
