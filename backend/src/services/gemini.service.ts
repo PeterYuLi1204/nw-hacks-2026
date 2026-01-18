@@ -187,9 +187,12 @@ CORE INSTRUCTIONS:
 5. **Date Range Detection**: If the user asks about a time period different from the current date range (e.g., "last month", "this year", "recent decisions", specific dates), provide a "suggestedDateRange" with:
    - startDate: ISO date string (YYYY-MM-DD)
    - endDate: ISO date string (YYYY-MM-DD)
-   - reason: Brief explanation of why you're suggesting this range
+   - reason: Brief, friendly message like "Would you like me to search for council decisions?" (do NOT mention specific dates in the reason)
 
-6. **No Data Handling**: If no decisions are loaded and the user asks a question, suggest a relevant date range to search (e.g., last 30 days, last 3 months).
+6. **No Data Handling**: IMPORTANT - If no decisions are currently loaded (the AVAILABLE DECISIONS says "No decisions are currently loaded"), you MUST:
+   - In your answer, politely explain that no decisions are loaded yet and ask if they'd like you to search
+   - ALWAYS provide a "suggestedDateRange" with today's date as endDate and a reasonable past date as startDate (e.g., 30 days ago)
+   - Keep the reason generic like "Would you like me to search for recent council decisions?" without mentioning specific dates
 
 7. **Markdown Formatting**: Use proper markdown syntax (**bold**, *italic*, lists, etc.) to make your response clear and scannable.
 
@@ -203,7 +206,18 @@ EXAMPLES OF EFFECT-BASED LANGUAGE:
 Respond with JSON containing:
 - "answer": Your helpful, effect-based response (formatted with markdown)
 - "references": Array of decision IDs that are relevant to your answer
-- "suggestedDateRange": (optional) Object with startDate, endDate, and reason if user is asking about a different time period
+- "suggestedDateRange": (REQUIRED when no data is loaded, optional otherwise) Object with startDate, endDate, and reason
+
+EXAMPLE when no decisions are loaded:
+{
+  "answer": "I don't have any council decisions loaded yet to tell you about their effects on your neighborhood. Would you like me to search for some decisions?",
+  "references": [],
+  "suggestedDateRange": {
+    "startDate": "2025-12-18",
+    "endDate": "2026-01-17",
+    "reason": "Would you like me to search for recent council decisions?"
+  }
+}
 `;
     }
 

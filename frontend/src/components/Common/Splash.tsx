@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { IoMdNavigate } from 'react-icons/io'
-import AddressSearch from './AddressSearch'
+import AddressSearch from '../AddressSearch'
 
 export default function Splash({setUserLocation}: {setUserLocation: (location: [number, number]) => void}) {
   const [error, setError] = useState<string | null>(null)

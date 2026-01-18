@@ -3,7 +3,7 @@ import MeetingDetail from './MeetingDetail';
 import MeetingsList from './MeetingsList';
 import SidebarHeader from './SidebarHeader';
 import { SIDEBAR_WIDTH } from '../../constants/layout';
-import FunFacts from './FunFacts';
+import FunFacts from '../FunFacts';
 
 interface MeetingsSidebarProps {
   decisions: DecisionWithContext[];

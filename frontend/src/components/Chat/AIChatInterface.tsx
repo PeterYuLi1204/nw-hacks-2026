@@ -161,52 +161,31 @@ export default function AIChatInterface({
 
   // Component for date range search prompt
   const DateRangePrompt = ({ suggestedRange }: { suggestedRange: { startDate: string; endDate: string; reason: string } }) => {
-    const [startDate, setStartDate] = useState(suggestedRange.startDate);
-    const [endDate, setEndDate] = useState(suggestedRange.endDate);
-
-    const handleSearch = () => {
-      if (onTriggerSearch && startDate && endDate) {
-        onTriggerSearch(startDate, endDate);
-      }
-    };
-
     return (
-      <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-xs text-gray-700 mb-2">{suggestedRange.reason}</p>
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-2 items-center">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              max={endDate}
-              className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded bg-white"
-            />
-            <span className="text-xs text-gray-500">to</span>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              min={startDate}
-              className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded bg-white"
-            />
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={handleSearch}
-              disabled={isSearching || !startDate || !endDate}
-              className="flex-1 px-3 py-1.5 text-xs font-medium bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isSearching ? 'Searching...' : 'Yes, search'}
-            </button>
-            <button
-              onClick={() => {/* Do nothing, just dismiss */}}
-              disabled={isSearching}
-              className="flex-1 px-3 py-1.5 text-xs font-medium bg-gray-200 text-gray-700 rounded hover:bg-gray-300 disabled:opacity-50 transition-colors"
-            >
-              No, cancel
-            </button>
-          </div>
+      <div className="mt-2 p-2 bg-gray-50 border border-gray-200 rounded">
+        <p className="text-xs text-gray-700 mb-1.5">{suggestedRange.reason}</p>
+        <div className="flex gap-1.5">
+          <button
+            onClick={() => handleQuickSearch(3)}
+            disabled={isSearching}
+            className="flex-1 px-2 py-1 text-xs font-medium bg-white hover:bg-gray-100 text-gray-700 rounded border border-gray-300 transition-colors disabled:opacity-50"
+          >
+            3 days
+          </button>
+          <button
+            onClick={() => handleQuickSearch(7)}
+            disabled={isSearching}
+            className="flex-1 px-2 py-1 text-xs font-medium bg-white hover:bg-gray-100 text-gray-700 rounded border border-gray-300 transition-colors disabled:opacity-50"
+          >
+            Last week
+          </button>
+          <button
+            onClick={() => handleQuickSearch(30)}
+            disabled={isSearching}
+            className="flex-1 px-2 py-1 text-xs font-medium bg-white hover:bg-gray-100 text-gray-700 rounded border border-gray-300 transition-colors disabled:opacity-50"
+          >
+            Last month
+          </button>
         </div>
       </div>
     );
@@ -241,28 +220,32 @@ export default function AIChatInterface({
         
         {/* Difficulty Toggle */}
         <div className="px-4 pb-3">
-          <p className="text-xs text-gray-600 mb-1.5">Explanation style:</p>
-          <div className="flex gap-1.5">
-            <button
-              onClick={() => setDifficultyLevel('simple')}
-              className={`flex-1 px-2.5 py-1 text-xs font-medium rounded transition-all ${
-                difficultyLevel === 'simple'
-                  ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                  : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'
-              }`}
-            >
-              Easy
-            </button>
-            <button
-              onClick={() => setDifficultyLevel('detailed')}
-              className={`flex-1 px-2.5 py-1 text-xs font-medium rounded transition-all ${
-                difficultyLevel === 'detailed'
-                  ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                  : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'
-              }`}
-            >
-              In-Depth
-            </button>
+          <div className="flex items-center gap-2 text-xs text-gray-700">
+            <span className="italic">I want explanations in</span>
+            <div className="inline-flex items-center border border-gray-300 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setDifficultyLevel('simple')}
+                className={`px-3 py-1 font-medium transition-colors ${
+                  difficultyLevel === 'simple'
+                    ? 'bg-gray-200 text-gray-800'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                simple
+              </button>
+              <div className="w-px h-5 bg-gray-300" />
+              <button
+                onClick={() => setDifficultyLevel('detailed')}
+                className={`px-3 py-1 font-medium transition-colors ${
+                  difficultyLevel === 'detailed'
+                    ? 'bg-gray-200 text-gray-800'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                detailed
+              </button>
+            </div>
+            <span className="italic">tone</span>
           </div>
         </div>
       </div>
@@ -280,15 +263,22 @@ export default function AIChatInterface({
             
             {/* Quick search actions when no data is loaded */}
             {decisions.length === 0 && onTriggerSearch && (
-              <div className="mt-4 max-w-[240px] mx-auto">
+              <div className="mt-4 mx-auto">
                 <p className="text-xs text-gray-600 mb-2">Find council decisions from:</p>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex gap-2 justify-center">
+                  <button
+                    onClick={() => handleQuickSearch(3)}
+                    disabled={isSearching}
+                    className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors disabled:opacity-50 border border-gray-200"
+                  >
+                    {isSearching ? 'Searching...' : '3 days'}
+                  </button>
                   <button
                     onClick={() => handleQuickSearch(7)}
                     disabled={isSearching}
                     className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors disabled:opacity-50 border border-gray-200"
                   >
-                    {isSearching ? 'Searching...' : 'Last 7 days'}
+                    {isSearching ? 'Searching...' : 'Last week'}
                   </button>
                   <button
                     onClick={() => handleQuickSearch(30)}
@@ -296,13 +286,6 @@ export default function AIChatInterface({
                     className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors disabled:opacity-50 border border-gray-200"
                   >
                     {isSearching ? 'Searching...' : 'Last month'}
-                  </button>
-                  <button
-                    onClick={() => handleQuickSearch(90)}
-                    disabled={isSearching}
-                    className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors disabled:opacity-50 border border-gray-200"
-                  >
-                    {isSearching ? 'Searching...' : 'Last 3 months'}
                   </button>
                 </div>
               </div>

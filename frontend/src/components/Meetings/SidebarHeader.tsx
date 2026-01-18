@@ -1,4 +1,4 @@
-import { IoClose } from 'react-icons/io5';
+import { IoClose, IoStopOutline } from 'react-icons/io5';
 
 interface SidebarHeaderProps {
   decisionsCount: number;
@@ -33,10 +33,18 @@ export default function SidebarHeader({ decisionsCount, loading, showCancel, onC
         {showCancel && onCancel && (
           <button
             onClick={onCancel}
-            className="ml-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            title="Clear results"
+            className={`ml-2 p-2 rounded-lg transition-all group ${
+              loading 
+                ? 'hover:bg-red-50' 
+                : 'hover:bg-gray-100'
+            }`}
+            title={loading ? "Stop search" : "Clear results"}
           >
-            <IoClose className="w-6 h-6 text-gray-500 hover:text-gray-700" />
+            {loading ? (
+              <IoStopOutline className="w-6 h-6 text-red-400 group-hover:text-red-600 transition-colors" />
+            ) : (
+              <IoClose className="w-6 h-6 text-gray-500 group-hover:text-gray-700 transition-colors" />
+            )}
           </button>
         )}
       </div>

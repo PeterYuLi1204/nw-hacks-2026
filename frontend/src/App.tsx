@@ -129,7 +129,13 @@ function App() {
       eventSourceRef.current = null;
     }
 
-    // Clear state
+    // If search is active (loading), just stop it and keep current results
+    if (loading) {
+      setLoading(false);
+      return;
+    }
+
+    // Otherwise, clear everything
     setLoading(false);
     setDecisions([]);
     setSelectedDecision(null);
