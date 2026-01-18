@@ -37,6 +37,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const dateFilterRef = useRef<{ clearDates: () => void } | null>(null);
 
   const handleFilter = (startDate: string, endDate: string) => {
     // Close any existing connection
@@ -115,6 +116,25 @@ function App() {
     setSelectedDecision(decision);
   };
 
+  const handleCancel = () => {
+    // Close any existing connection
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+    }
+    
+    // Clear state
+    setLoading(false);
+    setDecisions([]);
+    setSelectedDecision(null);
+    setError(null);
+    
+    // Clear date fields
+    if (dateFilterRef.current) {
+      dateFilterRef.current.clearDates();
+    }
+  };
+
   return (
     <div style={{ height: '100vh', width: '100vw', position: 'relative' }}>
       <Map 
@@ -124,7 +144,7 @@ function App() {
         onMarkerClick={handleMarkerClick}
       />
       
-      <DateRangeFilter onFilter={handleFilter} loading={loading} />
+      <DateRangeFilter ref={dateFilterRef} onFilter={handleFilter} loading={loading} />
       
       <MeetingsSidebar 
         decisions={decisions} 
@@ -132,6 +152,7 @@ function App() {
         selectedDecision={selectedDecision}
         onDecisionClick={handleDecisionClick}
         onBack={handleBack}
+        onCancel={handleCancel}
       />
 
       {error && (

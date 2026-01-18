@@ -6,6 +6,7 @@ interface MeetingsSidebarProps {
   selectedDecision: DecisionWithContext | null;
   onDecisionClick: (decision: DecisionWithContext) => void;
   onBack: () => void;
+  onCancel?: () => void;
 }
 
 export default function MeetingsSidebar({ 
@@ -13,7 +14,8 @@ export default function MeetingsSidebar({
   loading = false,
   selectedDecision,
   onDecisionClick,
-  onBack
+  onBack,
+  onCancel
 }: MeetingsSidebarProps) {
   const formatDate = (dateString: string) => {
     if (!dateString) return 'No date';
@@ -147,12 +149,37 @@ export default function MeetingsSidebar({
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="bg-gray-800 text-white p-4">
-          <h2 className="text-lg font-bold">Council Decisions</h2>
-          <p className="text-sm text-gray-300 mt-1">
-            {loading 
-              ? `Loading... (${decisions.length} decisions found)` 
-              : `${decisions.length} decision${decisions.length !== 1 ? 's' : ''} found`}
-          </p>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h2 className="text-lg font-bold">Council Decisions</h2>
+              <p className="text-sm text-gray-300 mt-1">
+                {loading 
+                  ? `Loading... (${decisions.length} decisions found)` 
+                  : `${decisions.length} decision${decisions.length !== 1 ? 's' : ''} found`}
+              </p>
+            </div>
+            {(loading || decisions.length > 0) && onCancel && (
+              <button
+                onClick={onCancel}
+                className="ml-2 p-1.5 hover:bg-gray-700 rounded transition-colors"
+                title="Cancel and clear"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Content */}
@@ -205,25 +232,31 @@ export default function MeetingsSidebar({
                   </p>
 
                   <div className="flex items-center justify-between">
-                    {decision.location && (
-                      <span className="inline-flex items-center text-xs text-green-600">
-                        <svg
-                          className="w-3 h-3 mr-1"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        Has location
+                    {decision.location ? (
+                      <>
+                        <span className="inline-flex items-center text-xs text-green-600">
+                          <svg
+                            className="w-3 h-3 mr-1"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          Has location
+                        </span>
+                        <span className="text-xs text-blue-600 font-medium">
+                          View details →
+                        </span>
+                      </>
+                    ) : (
+                      <span className="ml-auto text-xs text-blue-600 font-medium">
+                        View details →
                       </span>
                     )}
-                    <span className="text-xs text-blue-600 font-medium">
-                      View details →
-                    </span>
                   </div>
                 </div>
               ))}
