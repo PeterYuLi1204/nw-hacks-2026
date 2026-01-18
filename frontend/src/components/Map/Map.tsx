@@ -5,6 +5,7 @@ import L from 'leaflet'
 import type { DecisionWithContext } from '../../App'
 import { userLocationIcon } from '../../mapIcons'
 import { AIChatButton, AIChatInterface } from '../Chat'
+import { IoNavigate } from 'react-icons/io5'
 
 // Fix for default marker icon in React-Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,6 +69,48 @@ function MapBoundsHandler({
   return null
 }
 
+// Component to add custom map controls
+function MapControls({ userLocation }: { userLocation: [number, number] }) {
+  const map = useMap()
+
+  useEffect(() => {
+    // Add zoom control to bottom left
+    const zoomControl = L.control.zoom({ position: 'bottomleft' }).addTo(map)
+
+    // Cleanup function to remove the control when component unmounts
+    return () => {
+      map.removeControl(zoomControl)
+    }
+  }, [map])
+
+  const flyToUserLocation = () => {
+    map.flyTo(userLocation, 15, {
+      duration: 1.5
+    })
+  }
+
+  return (
+    <div className="leaflet-bottom leaflet-left" style={{ marginBottom: '80px', marginLeft: '10px' }}>
+      <div className="leaflet-control leaflet-bar !m-0">
+        <button
+          onClick={flyToUserLocation}
+          className="bg-white hover:bg-gray-50 w-[30px] h-[30px] flex items-center justify-center border-0 cursor-pointer text-gray-700 hover:text-blue-600 transition-colors"
+          style={{
+            fontSize: '18px',
+            lineHeight: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          title="Fly to your location"
+        >
+          <IoNavigate />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function Map({ 
   userLocation = [49.2827, -123.1207], 
   zoom = 13,
@@ -108,11 +151,26 @@ export default function Map({
 
   return (
     <div style={{ height: '100%', width: '100%', position: 'relative' }}>
+      {/* Logo and App Name - Top Left */}
+      <div className="absolute top-5 left-4 z-[1000] flex items-center gap-2">
+        <img 
+          src="/logo.png" 
+          alt="Town Square Logo" 
+          className="h-10 w-auto object-contain"
+        />
+        <div className="text-xl font-medium text-gray-800 leading-tight">
+          <span className="text-blue-400 italic underline underline-offset-4 decoration-dashed decoration-2" style={{ fontFamily: 'Georgia, serif' }}>
+            Town Square
+          </span>
+        </div>
+      </div>
+
       <MapContainer
         center={userLocation}
         zoom={zoom}
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
+        zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -121,6 +179,9 @@ export default function Map({
         
         {/* Component to handle automatic bounds adjustment */}
         <MapBoundsHandler userLocation={userLocation} decisions={decisions} />
+        
+        {/* Custom map controls */}
+        <MapControls userLocation={userLocation} />
         
         {/* User location marker at center */}
         <Marker position={userLocation} icon={userLocationIcon} interactive={false} />
