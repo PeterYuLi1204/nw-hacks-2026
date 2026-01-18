@@ -53,7 +53,7 @@ export default function DateRangeFilter({ onFilter, loading = false }: DateRange
         <button
           onClick={handleClear}
           disabled={loading}
-          className="!px-3 !py-1.5 border !border-gray-300 rounded text-sm !bg-white !text-black"
+          className="px-3 py-1.5 border border-gray-300 rounded text-sm bg-white text-black"
           title="Clear filters"
         >
           ✕
