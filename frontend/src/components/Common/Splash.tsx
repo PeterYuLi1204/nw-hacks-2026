@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { IoMdNavigate } from 'react-icons/io'
+import { IoNavigate } from 'react-icons/io5'
 import AddressSearch from '../AddressSearch'
 
 export default function Splash({setUserLocation}: {setUserLocation: (location: [number, number]) => void}) {
@@ -26,9 +26,9 @@ export default function Splash({setUserLocation}: {setUserLocation: (location: [
           {/* Header section */}
           <div className="mb-8">
             <h1 className="text-5xl font-bold text-gray-900 mb-4 leading-tight">
-              Welcome to
+              Welcome to your
               <br />
-              <span className="text-blue-400 font-medium italic font-serif" style={{ fontFamily: 'Georgia, serif' }}>
+              <span className="text-blue-400 font-medium italic underline underline-offset-8 decoration-dashed decoration-4" style={{ fontFamily: 'Georgia, serif' }}>
                 Town Square
               </span>
             </h1>
@@ -63,7 +63,7 @@ export default function Splash({setUserLocation}: {setUserLocation: (location: [
               onClick={() => setUserLocation([49.2827, -123.1207])}
               className="w-full py-3 px-4 bg-linear-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 text-gray-700 rounded-xl border border-gray-200 transition-all duration-200 flex items-center justify-center gap-2 group shadow-sm hover:shadow-md"
             >
-              <IoMdNavigate className="text-lg group-hover:rotate-45 transition-transform duration-300" />
+              <IoNavigate className="text-lg group-hover:rotate-45 transition-transform duration-300" />
               <span className="font-medium">Skip and explore Vancouver, BC</span>
             </button>
           </div>
