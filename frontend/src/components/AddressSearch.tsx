@@ -205,7 +205,7 @@ export default function AddressSearch({ onLocationSelect, onError }: AddressSear
 
   return (
     <div className="space-y-3">
-      {/* Search Input */}
+      {/* Search Input with Location Button */}
       <div className="relative">
         <IoMdSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl pointer-events-none z-10" />
         <input
@@ -223,18 +223,25 @@ export default function AddressSearch({ onLocationSelect, onError }: AddressSear
             }
           }}
           placeholder="Enter your address..."
-          className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-base shadow-sm hover:border-gray-300 transition-all duration-200 bg-white"
+          className="w-full pl-12 pr-14 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-base shadow-sm hover:border-gray-300 transition-all duration-200 bg-white"
         />
         
-        {/* Search Loading Indicator */}
-        {isLoadingSearch && (
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <svg className="animate-spin h-5 w-5 text-blue-500" viewBox="0 0 24 24">
+        {/* Location Button */}
+        <button
+          onClick={requestLocation}
+          disabled={isLoadingLocation}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-blue-100 hover:bg-blue-200 disabled:bg-gray-200 text-blue-600 disabled:text-gray-400 rounded-lg transition-all duration-200 group"
+          title="Use my current location"
+        >
+          {isLoadingLocation ? (
+            <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-          </div>
-        )}
+          ) : (
+            <MdMyLocation className="text-xl group-hover:scale-110 transition-transform duration-200" />
+          )}
+        </button>
 
         {/* Autocomplete Dropdown */}
         {showSuggestions && suggestions.length > 0 && (
@@ -286,28 +293,6 @@ export default function AddressSearch({ onLocationSelect, onError }: AddressSear
           </div>
         )}
       </div>
-
-      {/* Geolocation Button */}
-      <button
-        onClick={requestLocation}
-        disabled={isLoadingLocation}
-        className="w-full py-3.5 px-4 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-3 group"
-      >
-        {isLoadingLocation ? (
-          <>
-            <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-            </svg>
-            <span>Getting your location...</span>
-          </>
-        ) : (
-          <>
-            <MdMyLocation className="text-xl group-hover:scale-110 transition-transform duration-200" />
-            <span>Use my current location</span>
-          </>
-        )}
-      </button>
     </div>
   )
 }

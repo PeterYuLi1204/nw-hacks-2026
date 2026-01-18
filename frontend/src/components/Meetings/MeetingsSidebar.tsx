@@ -12,6 +12,8 @@ interface MeetingsSidebarProps {
   onDecisionClick: (decision: DecisionWithContext) => void;
   onBack: () => void;
   onCancel?: () => void;
+  maxDistance: number | null;
+  onMaxDistanceChange: (distance: number | null) => void;
 }
 
 export default function MeetingsSidebar({
@@ -20,7 +22,9 @@ export default function MeetingsSidebar({
   selectedDecision,
   onDecisionClick,
   onBack,
-  onCancel
+  onCancel,
+  maxDistance,
+  onMaxDistanceChange
 }: MeetingsSidebarProps) {
   // Detail view for a single decision
   if (selectedDecision) {
@@ -29,7 +33,7 @@ export default function MeetingsSidebar({
 
   // List view
   return (
-    <div 
+    <div
       className="fixed top-0 right-0 h-full bg-gradient-to-b from-gray-50 to-white shadow-2xl z-[999]"
       style={{ width: `${SIDEBAR_WIDTH}px` }}
     >
@@ -39,6 +43,8 @@ export default function MeetingsSidebar({
           loading={loading}
           showCancel={loading || decisions.length > 0}
           onCancel={onCancel}
+          maxDistance={maxDistance}
+          onMaxDistanceChange={onMaxDistanceChange}
         />
 
         <div className="flex-1 overflow-y-auto p-3">

@@ -15,21 +15,21 @@ export default function Splash({setUserLocation}: {setUserLocation: (location: [
   }
 
   return (
-    <div className="h-screen w-screen flex items-center justify-start bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-linear-to-br from-blue-100/30 to-indigo-200/30 rounded-bl-full transform translate-x-1/4 -translate-y-1/4"></div>
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-linear-to-tr from-purple-100/20 to-blue-100/20 rounded-full blur-3xl"></div>
-      
-      {/* Main content container */}
-      <div className="relative z-10 max-w-xl w-full ml-8 md:ml-16 lg:ml-24 xl:ml-32 mr-8">
-        <div className="bg-white/80 backdrop-blur-sm p-10 rounded-2xl shadow-2xl border border-white/20">
+    <div
+      className="relative h-screen w-screen overflow-hidden bg-center bg-cover bg-no-repeat"
+      style={{ backgroundImage: "url('/background.png')" }}
+    >
+      <div className="relative z-10 h-full w-full flex items-center justify-center gap-8 lg:gap-16 px-8 py-8">
+        {/* Left side - Panel */}
+        <div className="shrink-0 max-w-xl w-full">
+          <div className="bg-white/80 backdrop-blur-sm p-10 rounded-2xl shadow-2xl border border-white/20">
           {/* Header section */}
           <div className="mb-8">
             <h1 className="text-5xl font-bold text-gray-900 mb-4 leading-tight">
               Welcome to
               <br />
-              <span className="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent italic">
-                Civic Pulse
+              <span className="text-blue-400 font-medium italic font-serif" style={{ fontFamily: 'Georgia, serif' }}>
+                Town Square
               </span>
             </h1>
             <p className="text-lg text-gray-600 leading-relaxed">
@@ -74,6 +74,16 @@ export default function Splash({setUserLocation}: {setUserLocation: (location: [
           </p>
         </div>
       </div>
+
+      {/* Right side - Large logo */}
+      <div className="hidden lg:flex shrink-0 items-center justify-center">
+        <img 
+          src="/logo.png" 
+          alt="Town Square Logo" 
+          className="max-w-2xl w-full h-auto object-contain drop-shadow-2xl"
+        />
+      </div>
+    </div>
     </div>
   )
 }
