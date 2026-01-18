@@ -33,7 +33,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 // API routes
 app.use('/api', meetingsRouter);
-app.use('/api', geminiRouter);
+app.use('/api/gemini', geminiRouter);
 
 // 404 handler
 app.use((req: Request, res: Response) => {
@@ -57,6 +57,7 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
   console.log(`API endpoint: http://localhost:${PORT}/api/meetings`);
-  console.log(`Gemini endpoint: http://localhost:${PORT}/api/extract-decisions`);
+  console.log(`Gemini endpoints: http://localhost:${PORT}/api/gemini/extract-decisions`);
+  console.log(`                  http://localhost:${PORT}/api/gemini/chat`);
   console.log('=================================\n');
 });

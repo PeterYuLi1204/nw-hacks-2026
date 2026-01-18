@@ -1,9 +1,11 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import type { DecisionWithContext } from '../App'
 import { userLocationIcon } from '../mapIcons'
+import AIChatButton from './AIChatButton'
+import AIChatInterface from './AIChatInterface'
 
 // Fix for default marker icon in React-Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,6 +21,7 @@ interface MapProps {
   zoom?: number
   decisions?: DecisionWithContext[]
   onMarkerClick?: (decision: DecisionWithContext) => void
+  onSelectDecision?: (decision: DecisionWithContext) => void
 }
 
 // Component to handle automatic bounds adjustment
@@ -49,8 +52,8 @@ function MapBoundsHandler({
 
       // Fit the map to show all markers with some padding
       map.fitBounds(bounds, { 
-        padding: [5, 5],
-        maxZoom: 15 // Don't zoom in too much
+        padding: [0, 0],
+        maxZoom: 10
       })
     }
   }, [decisions, userLocation, map])
@@ -62,8 +65,11 @@ export default function Map({
   userLocation = [49.2827, -123.1207], 
   zoom = 13,
   decisions = [],
-  onMarkerClick
+  onMarkerClick,
+  onSelectDecision
 }: MapProps) {
+  const [isChatOpen, setIsChatOpen] = useState(false)
+
   // Filter decisions that have valid locations
   const decisionsWithLocations = decisions.filter(
     (d): d is DecisionWithContext & { location: [number, number] } => 
@@ -84,53 +90,72 @@ export default function Map({
     }
   };
 
-  return (
-    <MapContainer
-      center={userLocation}
-      zoom={zoom}
-      style={{ height: '100%', width: '100%' }}
-      scrollWheelZoom={true}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-      />
-      
-      {/* Component to handle automatic bounds adjustment */}
-      <MapBoundsHandler userLocation={userLocation} decisions={decisions} />
-      
-      {/* User location marker at center */}
-      <Marker position={userLocation} icon={userLocationIcon} />
+  const handleSelectDecision = (decision: DecisionWithContext) => {
+    if (onSelectDecision) {
+      onSelectDecision(decision)
+    }
+  }
 
-      {decisionsWithLocations.map((decision) => (
-        <Marker 
-          key={decision.decisionId} 
-          position={decision.location}
-          eventHandlers={{
-            click: () => {
-              if (onMarkerClick) {
-                onMarkerClick(decision)
+  return (
+    <div style={{ height: '100%', width: '100%', position: 'relative' }}>
+      <MapContainer
+        center={userLocation}
+        zoom={zoom}
+        style={{ height: '100%', width: '100%' }}
+        scrollWheelZoom={true}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        />
+        
+        {/* Component to handle automatic bounds adjustment */}
+        <MapBoundsHandler userLocation={userLocation} decisions={decisions} />
+        
+        {/* User location marker at center */}
+        <Marker position={userLocation} icon={userLocationIcon} />
+
+        {decisionsWithLocations.map((decision) => (
+          <Marker 
+            key={decision.decisionId} 
+            position={decision.location}
+            eventHandlers={{
+              click: () => {
+                if (onMarkerClick) {
+                  onMarkerClick(decision)
+                }
               }
-            }
-          }}
-        >
-          <Popup>
-            <div className="max-w-[250px]">
-              <h3 className="font-semibold text-sm mb-1">{decision.title}</h3>
-              <p className="text-xs text-gray-500 mb-2">
-                {decision.meetingType} • {formatDate(decision.meetingDate)}
-              </p>
-              <p className="text-xs text-gray-600 line-clamp-3">{decision.summary}</p>
-              <button
-                onClick={() => onMarkerClick && onMarkerClick(decision)}
-                className="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium"
-              >
-                View details →
-              </button>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+            }}
+          >
+            <Popup>
+              <div className="max-w-[250px]">
+                <h3 className="font-semibold text-sm mb-1">{decision.title}</h3>
+                <p className="text-xs text-gray-500 mb-2">
+                  {decision.meetingType} • {formatDate(decision.meetingDate)}
+                </p>
+                <p className="text-xs text-gray-600 line-clamp-3">{decision.summary}</p>
+                <button
+                  onClick={() => onMarkerClick && onMarkerClick(decision)}
+                  className="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  View details →
+                </button>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+
+      {/* AI Chat Overlay */}
+      {isChatOpen ? (
+        <AIChatInterface
+          onClose={() => setIsChatOpen(false)}
+          decisions={decisions}
+          onSelectDecision={handleSelectDecision}
+        />
+      ) : (
+        <AIChatButton onClick={() => setIsChatOpen(true)} />
+      )}
+    </div>
   )
 }

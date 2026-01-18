@@ -1,9 +1,10 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { MeetingDecision } from '../types/gemini.js';
+import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
+import type { MeetingDecision, DecisionContext, ChatResponse } from '../types/gemini.js';
 
 export class GeminiService {
     private genAI: GoogleGenerativeAI;
     private model: any;
+    private chatModel: any;
 
     constructor(apiKey: string) {
         if (!apiKey) {
@@ -16,21 +17,40 @@ export class GeminiService {
             generationConfig: {
                 responseMimeType: 'application/json',
                 responseSchema: {
-                    type: 'array',
+                    type: SchemaType.ARRAY,
                     items: {
-                        type: 'object',
+                        type: SchemaType.OBJECT,
                         properties: {
-                            title: { type: 'string' },
-                            content: { type: 'string' },
+                            title: { type: SchemaType.STRING },
+                            content: { type: SchemaType.STRING },
                             location: {
-                                type: 'array',
-                                items: { type: 'number' },
+                                type: SchemaType.ARRAY,
+                                items: { type: SchemaType.NUMBER },
                                 nullable: true
                             },
-                            summary: { type: 'string' }
+                            summary: { type: SchemaType.STRING }
                         },
                         required: ['title', 'content', 'location', 'summary']
                     }
+                }
+            }
+        });
+
+        // Chat model with different schema
+        this.chatModel = this.genAI.getGenerativeModel({
+            model: 'gemini-2.5-flash-lite',
+            generationConfig: {
+                responseMimeType: 'application/json',
+                responseSchema: {
+                    type: SchemaType.OBJECT,
+                    properties: {
+                        answer: { type: SchemaType.STRING },
+                        references: {
+                            type: SchemaType.ARRAY,
+                            items: { type: SchemaType.STRING }
+                        }
+                    },
+                    required: ['answer', 'references']
                 }
             }
         });
@@ -103,5 +123,48 @@ export class GeminiService {
         // Parse the JSON response
         const decisions: MeetingDecision[] = JSON.parse(text);
         return decisions;
+    }
+
+    private makeChatPrompt(message: string, decisions: DecisionContext[]): string {
+        const decisionsContext = decisions.map(d => 
+            `[ID: ${d.decisionId}] "${d.title}" (${d.meetingType}, ${d.meetingDate}): ${d.summary}`
+        ).join('\n');
+
+        return `
+You are a helpful AI assistant for a Vancouver city council decisions app. You help users understand council meeting decisions.
+
+Here are the currently displayed decisions that the user can see:
+${decisionsContext}
+
+USER QUESTION: ${message}
+
+INSTRUCTIONS:
+1. Answer the user's question based on the decisions provided above.
+2. Be helpful, concise, and informative.
+3. If the question is about decisions affecting a specific area or topic, identify relevant decisions from the list.
+4. In the "references" array, include the decision IDs (e.g., "1-0", "2-1") of any decisions you mention or that are relevant to your answer.
+5. If no decisions are relevant, provide a helpful response and leave references empty.
+6. Keep your answer focused and easy to understand for regular citizens.
+7. Format your answer using proper markdown syntax (use **bold**, *italic*, lists, etc. where appropriate).
+8. Use markdown formatting to make your response clear and readable.
+
+Respond with JSON containing:
+- "answer": Your helpful response to the user (formatted with markdown)
+- "references": Array of decision IDs that are relevant to your answer
+`;
+    }
+
+    async chatWithDecisions(message: string, decisions: DecisionContext[]): Promise<ChatResponse> {
+        if (!message || typeof message !== 'string' || message.trim() === '') {
+            throw new Error('Please provide a valid message');
+        }
+
+        const prompt = this.makeChatPrompt(message, decisions);
+        const result = await this.chatModel.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        const chatResponse: ChatResponse = JSON.parse(text);
+        return chatResponse;
     }
 }
