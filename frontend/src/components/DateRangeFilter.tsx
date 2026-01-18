@@ -9,12 +9,16 @@ export default function DateRangeFilter({ onFilter, loading = false }: DateRange
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  const today = new Date().toISOString().split('T')[0];
+
   const handleStartDateChange = (value: string) => {
+    if (loading) return;
     setStartDate(value);
     onFilter(value, endDate);
   };
 
   const handleEndDateChange = (value: string) => {
+    if (loading) return;
     setEndDate(value);
     onFilter(startDate, value);
   };
@@ -32,9 +36,8 @@ export default function DateRangeFilter({ onFilter, loading = false }: DateRange
         value={startDate}
         onChange={(e) => handleStartDateChange(e.target.value)}
         placeholder="Start date"
-        className="px-3 py-1.5 border border-gray-300 rounded text-sm text-black bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 min-w-[140px]"
-        style={{ colorScheme: 'light' }}
-        disabled={loading}
+        max={endDate || today}
+        className="px-3 py-1.5 border border-gray-300 rounded text-sm text-black bg-white min-w-[140px]"
       />
       
       <span className="text-gray-400 text-sm">to</span>
@@ -44,9 +47,9 @@ export default function DateRangeFilter({ onFilter, loading = false }: DateRange
         value={endDate}
         onChange={(e) => handleEndDateChange(e.target.value)}
         placeholder="End date"
-        className="px-3 py-1.5 border border-gray-300 rounded text-sm text-black bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 min-w-[140px]"
-        style={{ colorScheme: 'light' }}
-        disabled={loading}
+        min={startDate || undefined}
+        max={today}
+        className="px-3 py-1.5 border border-gray-300 rounded text-sm text-black bg-white"
       />
 
       {(startDate || endDate) && (
