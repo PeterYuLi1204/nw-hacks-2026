@@ -112,23 +112,23 @@ export default function FunFacts() {
     return (
         <div className="flex flex-col items-center justify-center h-full p-6 text-center space-y-6">
             <div className="relative">
-                <div className="w-12 h-12 border-4 border-gray-100 border-t-blue-600 rounded-full animate-spin"></div>
+                <div className="w-12 h-12 border-3 border-gray-200 border-t-blue-400 rounded-full animate-spin"></div>
             </div>
 
             <div>
-                <h3 className="text-xl font-bold text-gray-900">
+                <h3 className="text-xl font-bold text-gray-800">
                     Analyzing Minutes...
                 </h3>
                 <p className="text-gray-500 text-sm mt-1">Reading through council documents</p>
             </div>
 
-            <div className="w-full bg-gray-50 rounded-xl border border-gray-200 p-5">
-                <div className="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wider text-center">
+            <div className="w-full bg-blue-50/50 rounded-xl border border-blue-200/60 p-5 shadow-sm">
+                <div className="text-xs font-semibold text-blue-600/80 mb-3 uppercase tracking-wider text-center">
                     Did you know?
                 </div>
 
                 <div className={`transition-opacity duration-300 flex flex-col items-center gap-3 ${fade ? 'opacity-100' : 'opacity-0'}`}>
-                    <p className="text-gray-800 font-medium leading-relaxed">
+                    <p className="text-gray-700 font-medium leading-relaxed">
                         "{currentFact.text}"
                     </p>
                 </div>

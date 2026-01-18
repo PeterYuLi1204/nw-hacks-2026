@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { IoClose, IoTrash, IoSend, IoSparkles } from 'react-icons/io5';
 import ReactMarkdown from 'react-markdown';
 import type { DecisionWithContext } from '../../App';
+import DifficultyToggle from './DifficultyToggle';
 
 const API_BASE_URL = 'http://localhost:3001';
 
@@ -192,13 +193,13 @@ export default function AIChatInterface({
   };
 
   return (
-    <div className="absolute bottom-6 right-6 z-[1000] w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200">
+    <div className="absolute bottom-6 right-6 z-[1000] w-[390px] h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200">
       {/* Header */}
       <div className="bg-white border-b-2 border-blue-200">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
             <IoSparkles className="w-5 h-5 text-blue-600" />
-            <h3 className="font-semibold text-base text-gray-900">AI Assistant</h3>
+            <h3 className="font-semibold text-base text-gray-900">Chat About Town</h3>
           </div>
           <div className="flex items-center gap-0.5">
             <button
@@ -220,42 +221,19 @@ export default function AIChatInterface({
         
         {/* Difficulty Toggle */}
         <div className="px-4 pb-3">
-          <div className="flex items-center gap-2 text-xs text-gray-700">
-            <span className="italic">I want explanations in</span>
-            <div className="inline-flex items-center border border-gray-300 rounded-lg overflow-hidden">
-              <button
-                onClick={() => setDifficultyLevel('simple')}
-                className={`px-3 py-1 font-medium transition-colors ${
-                  difficultyLevel === 'simple'
-                    ? 'bg-gray-200 text-gray-800'
-                    : 'bg-white text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                simple
-              </button>
-              <div className="w-px h-5 bg-gray-300" />
-              <button
-                onClick={() => setDifficultyLevel('detailed')}
-                className={`px-3 py-1 font-medium transition-colors ${
-                  difficultyLevel === 'detailed'
-                    ? 'bg-gray-200 text-gray-800'
-                    : 'bg-white text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                detailed
-              </button>
-            </div>
-            <span className="italic">tone</span>
-          </div>
+          <DifficultyToggle 
+            difficultyLevel={difficultyLevel}
+            onDifficultyChange={setDifficultyLevel}
+          />
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50 to-white">
+      <div className={`flex-1 overflow-y-auto p-4 bg-gradient-to-b from-gray-50 to-white ${messages.length === 0 ? 'flex items-center justify-center' : 'space-y-4'}`}>
         {messages.length === 0 && (
-          <div className="text-center text-gray-500 mt-8">
-            <IoSparkles className="w-10 h-10 mx-auto mb-3 text-blue-300" />
-            <p className="text-sm mb-4">
+          <div className="text-center text-gray-500 flex flex-col items-center">
+            <IoSparkles className="w-10 h-10 mb-3 text-blue-300" />
+            <p className="text-sm mb-0">
               {decisions.length === 0 
                 ? "Let's find some council decisions to explore!"
                 : "Ask me about how council decisions affect you!"}
@@ -263,31 +241,37 @@ export default function AIChatInterface({
             
             {/* Quick search actions when no data is loaded */}
             {decisions.length === 0 && onTriggerSearch && (
-              <div className="mt-4 mx-auto">
-                <p className="text-xs text-gray-600 mb-2">Find council decisions from:</p>
-                <div className="flex gap-2 justify-center">
+              <div className="mt-4">
+                <p className="text-xs text-gray-600 mb-2">Find council decisions from...</p>
+                {isSearching ? (
                   <button
-                    onClick={() => handleQuickSearch(3)}
-                    disabled={isSearching}
-                    className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors disabled:opacity-50 border border-gray-200"
+                    disabled
+                    className="w-full px-3 py-1.5 bg-gray-50 text-gray-700 rounded text-xs font-medium border border-gray-200 opacity-50 cursor-not-allowed"
                   >
-                    {isSearching ? 'Searching...' : '3 days'}
+                    Searching...
                   </button>
-                  <button
-                    onClick={() => handleQuickSearch(7)}
-                    disabled={isSearching}
-                    className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors disabled:opacity-50 border border-gray-200"
-                  >
-                    {isSearching ? 'Searching...' : 'Last week'}
-                  </button>
-                  <button
-                    onClick={() => handleQuickSearch(30)}
-                    disabled={isSearching}
-                    className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors disabled:opacity-50 border border-gray-200"
-                  >
-                    {isSearching ? 'Searching...' : 'Last month'}
-                  </button>
-                </div>
+                ) : (
+                  <div className="flex gap-2 justify-center">
+                    <button
+                      onClick={() => handleQuickSearch(3)}
+                      className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors border border-gray-200"
+                    >
+                      3 days
+                    </button>
+                    <button
+                      onClick={() => handleQuickSearch(7)}
+                      className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors border border-gray-200"
+                    >
+                      Last week
+                    </button>
+                    <button
+                      onClick={() => handleQuickSearch(30)}
+                      className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-medium transition-colors border border-gray-200"
+                    >
+                      Last month
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -341,8 +325,8 @@ export default function AIChatInterface({
                 </div>
               )}
 
-              {/* Date Range Search Prompt for assistant messages */}
-              {message.role === 'assistant' && message.suggestedDateRange && onTriggerSearch && (
+              {/* Date Range Search Prompt for assistant messages - only when no data */}
+              {message.role === 'assistant' && message.suggestedDateRange && onTriggerSearch && decisions.length === 0 && (
                 <DateRangePrompt suggestedRange={message.suggestedDateRange} />
               )}
             </div>
@@ -375,13 +359,6 @@ export default function AIChatInterface({
             How will this affect my area?
           </button>
           <button
-            onClick={() => handleQuickQuestion("What changes can I expect from these decisions?")}
-            disabled={isLoading}
-            className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
-          >
-            What changes can I expect?
-          </button>
-          <button
             onClick={() => handleQuickQuestion("Which decisions will impact me the most?")}
             disabled={isLoading}
             className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
@@ -398,7 +375,7 @@ export default function AIChatInterface({
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask about council decisions..."
+            placeholder="Ask me anything about your neighborhood..."
             disabled={isLoading}
             className="flex-1 px-4 py-2.5 bg-gray-100 rounded-full text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all disabled:opacity-50"
           />

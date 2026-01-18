@@ -8,7 +8,7 @@ export default function AIChatButton({ onClick }: AIChatButtonProps) {
   return (
     <button
       onClick={onClick}
-      className="absolute bottom-6 right-6 z-[1000] w-14 h-14 rounded-lg bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center group"
+      className="absolute bottom-6 right-6 z-[1000] w-13 h-13 rounded-lg bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center group"
       aria-label="Open AI Chat"
     >
       <IoChatbubbleEllipses className="w-6 h-6 group-hover:scale-110 transition-transform" />
